@@ -6,15 +6,21 @@
 
 Use it for café openings, event announcements, product launches or promotional posters. Describe the message and visual direction in your assistant; Poster returns the actual preview URL and structured poster document when the task is ready.
 
-**Four shared tools · Local stdio · Hosted Streamable HTTP · Client acceptance pending · Your own Poster credits · MIT adapter**
+**Four shared tools · Local stdio · Hosted Streamable HTTP · ChatGPT/Claude read-only verified · Gemini unverified · Your own Poster credits · MIT adapter**
 
 [Website](https://poster.sh) · [API Keys](https://poster.sh/api-keys) · [Releases](https://github.com/aistudy11/poster-mcp/releases) · [Report an issue](https://github.com/aistudy11/poster-mcp/issues)
 
-## Remote web connection — endpoint deployed, client acceptance pending
+## Remote web connection — ChatGPT and Claude read-only verified
 
-The hosted Streamable HTTP endpoint is `https://poster.sh/api/mcp`, with OAuth authorization through your existing Poster sign-in and personal API Key. Production health, authorization discovery and unauthenticated refusal have passed. **ChatGPT, Gemini and Claude web acceptance is still pending**; deployment alone does not prove that a particular account or platform can connect.
+The hosted Streamable HTTP endpoint is `https://poster.sh/api/mcp`, with OAuth authorization through your existing Poster sign-in and personal API Key. Production health, authorization discovery and unauthenticated refusal have passed. **ChatGPT and Claude web read-only acceptance passed** on the tested accounts: OAuth, the two read-only tools, a real quote and an existing-result read. Gemini acceptance is paused by the user after the observed web page reported that the region is unsupported; it remains unverified. Deployment alone does not prove that a particular account or platform can connect.
 
 In a compatible remote MCP client, add that exact server URL and select OAuth. Sign in to your existing Poster account and choose your own active API Key by its label on the Poster consent page. Read-only access is the default for quoting and reading an existing result; keep it read-only for acceptance. Never paste your original Key into an AI conversation or callback URL. Platform account, region, plan and permission restrictions still apply.
+
+Client entry points checked on 2026-10-18:
+
+- **ChatGPT web:** Plugins → Add a custom MCP server → enter the hosted URL → OAuth/Dynamic Client Registration → request only `poster:read` → create/install and connect the personal plugin → complete Poster consent → try it in chat.
+- **Claude web:** Customize → Connectors → Add a custom connector → enter the hosted URL → sign in/register automatically → Connect → complete Poster consent. The observed Free account passed; account eligibility may differ.
+- **Gemini web:** [Google’s official instructions](https://support.google.com/gemini/answer/17209137?hl=en-12) describe Connected Apps → Custom apps → enter the hosted URL. Current requirements include a personal Google account, age 18+, being in the US, English and Keep Activity enabled. Those are Google eligibility conditions; the current region-blocked account has not completed acceptance. Check your own privacy settings before enabling activity.
 
 Connection has no additional Poster fee. Quote/read tools do not spend generation credits. Creation is opt-in during consent, requires a per-poster credit ceiling and explicit approval of the actual quote, and uses the same account balance and billing API as the website. A new AI connection does not create an account or grant credits again. Revoke future access in the existing account console at `/mcp/connections`; revocation does not cancel an already accepted poster job. AI-client subscriptions and access restrictions are separate.
 
@@ -120,10 +126,10 @@ This initial adapter exposes the supported text-to-poster flow. It does not add 
 ## Common setup questions
 
 - **No Poster tools?** Check that Node/npm are installed and available to your desktop app, that the release URL is copied in full, and that the client supports local stdio. Restart the MCP connection and inspect its server log. If the desktop app cannot find `npx`, use its absolute executable path from your Node installation.
-- **Can I use it in browser-only ChatGPT?** This release requires a client that can launch a local stdio process. It does not publish a remote MCP URL or OAuth connector.
+- **Can I use it in browser-only ChatGPT?** Yes, the hosted OAuth endpoint above passed read-only acceptance in ChatGPT web. Use the remote connection steps, rather than the local stdio configuration. Your account must expose custom MCP/plugin access. Gemini remains subject to its separate eligibility conditions and has not passed acceptance here.
 - **Is it free?** The adapter is MIT licensed. Quotes and reads do not spend generation credits; poster creation uses your Poster account's actual quoted credits. Continuing an approved existing job can perform recovery and settle its original price.
 - **What comes back?** A task ID and state; once `ready`, the actual `previewUrl`, structured `document` and other API result fields. The initial adapter has no editing, upload, translation or batch tools. The website's editor is a separate existing product capability.
-- **Where does my key go?** It stays in your private client settings and is sent only to the configured Poster origin. Never paste a real key into a directory, issue, example prompt or shared configuration.
+- **Where does my key go?** For local stdio, it stays in your private client settings and is sent only to the configured Poster origin. For remote OAuth, select the existing Key by label on Poster’s consent page; the original Key is not given to the AI client. Never paste a real key into a directory, issue, example prompt or shared configuration.
 
 ## Errors and retries
 

@@ -10,11 +10,11 @@ Use it for café openings, event announcements, product launches or promotional 
 
 [Website](https://poster.sh) · [API Keys](https://poster.sh/api-keys) · [Releases](https://github.com/aistudy11/poster-mcp/releases) · [Report an issue](https://github.com/aistudy11/poster-mcp/issues)
 
-## Remote web connection — ChatGPT and Claude read-only verified
+## Remote web connection — verified acceptance scopes
 
-The hosted Streamable HTTP endpoint is `https://poster.sh/api/mcp`, with OAuth authorization through your existing Poster sign-in and personal API Key. Production health, authorization discovery and unauthenticated refusal have passed. **ChatGPT and Claude web read-only acceptance passed** on the tested accounts: OAuth, the two read-only tools, a real quote and an existing-result read. Gemini acceptance is paused by the user after the observed web page reported that the region is unsupported; it remains unverified. Deployment alone does not prove that a particular account or platform can connect.
+The hosted Streamable HTTP endpoint is `https://poster.sh/api/mcp`, with OAuth authorization through your existing Poster sign-in and personal API Key. Production health, authorization discovery and unauthenticated refusal have passed. **ChatGPT and Claude web read-only acceptance passed** on the tested accounts: OAuth, the two read-only tools, a real quote and an existing-result read. An additional user-approved ChatGPT web acceptance generated one real standard poster, verified a two-credit task ledger debit, and revoked the temporary creation grant; a subsequent read was refused. This does not verify independent text-layer editing. Gemini acceptance is paused by the user after the observed web page reported that the region is unsupported; it remains unverified. Deployment alone does not prove that a particular account or platform can connect.
 
-In a compatible remote MCP client, add that exact server URL and select OAuth. Sign in to your existing Poster account and choose your own active API Key by its label on the Poster consent page. Read-only access is the default for quoting and reading an existing result; keep it read-only for acceptance. Never paste your original Key into an AI conversation or callback URL. Platform account, region, plan and permission restrictions still apply.
+In a compatible remote MCP client, add that exact server URL and select OAuth. Sign in to your existing Poster account and choose your own active API Key by its label on the Poster consent page. Read-only access is the default for quoting and reading an existing result; keep it read-only when testing quotes and existing-result reads. Never paste your original Key into an AI conversation or callback URL. Platform account, region, plan and permission restrictions still apply.
 
 Client entry points checked on 2026-10-18:
 

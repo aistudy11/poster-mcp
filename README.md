@@ -1,12 +1,50 @@
-# Poster MCP
+<p align="center"><img src="https://raw.githubusercontent.com/aistudy11/poster-mcp/codex/public-release/assets/logo.png" alt="Poster.sh logo" width="128" height="128"></p>
 
-An independent **stdio MCP server** that lets an MCP-compatible AI client quote a poster, submit an explicitly approved request, refresh its task and retrieve the owner's result through the existing [Poster](https://poster.sh) API.
+# Poster MCP — AI Poster Generator
 
-Poster continues to own API keys, permissions, models, prices, credits, generation, task persistence and results. This package contains only the MCP adapter. It does not implement a second generator, account system, credit store, database or background scheduler.
+[Poster.sh](https://poster.sh) is an **[AI Poster Generator](https://poster.sh)** that turns a text brief into a poster. This MCP server lets your AI assistant get an exact quote, create a poster after your approval, and retrieve your own result.
 
-## Installation and client configuration
+Use it for café openings, event announcements, product launches or promotional posters. Describe the message and visual direction in your assistant; Poster returns the actual preview URL and structured poster document when the task is ready.
 
-Requires Node.js 20.10 or newer. The standalone source is published at [aistudy11/poster-mcp](https://github.com/aistudy11/poster-mcp). Clone that repository, then install:
+**Four tools · Local stdio · Your own Poster API Key · MIT adapter**
+
+[Website](https://poster.sh) · [API Keys](https://poster.sh/api-keys) · [Releases](https://github.com/aistudy11/poster-mcp/releases) · [Report an issue](https://github.com/aistudy11/poster-mcp/issues)
+
+## Quick start
+
+Requires **Node.js 20.10+ with npm/npx** and an MCP client that can launch local **stdio** servers. This is not a remote HTTP connector: do not enter `poster.sh` as an MCP endpoint. Your assistant runs this adapter locally and it calls the existing Poster HTTPS API.
+
+1. Sign in to [Poster.sh API Keys](https://poster.sh/api-keys) and use your own existing key. Generation uses that account's balance.
+2. Paste the configuration below into your client's **private local MCP settings**, replacing only the key placeholder. Clients using `mcpServers` JSON, including Claude Desktop and Cursor, can use this format.
+3. Restart or reconnect your client's MCP server. Check that the four tools below appear, then ask for a quote. Quoting does not generate a poster or spend credits.
+
+```json
+{
+  "mcpServers": {
+    "poster": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=https://github.com/aistudy11/poster-mcp/releases/download/v0.1.1/poster-sh-mcp-0.1.1.tgz",
+        "poster-mcp"
+      ],
+      "env": {
+        "POSTER_API_KEY": "YOUR_POSTER_API_KEY"
+      }
+    }
+  }
+}
+```
+
+This installs the versioned official GitHub release automatically; no private product checkout, global package install or absolute script path is needed. The first start downloads dependencies, so allow it to finish. `npx` needs network access during installation.
+
+**Enable generation deliberately:** the configuration above allows quotes and reads but blocks new creation. To allow creation, add `POSTER_MAX_CREDITS_PER_POSTER` to `env` with your chosen integer limit as a string (for example `"10"` means a ceiling of 10 credits per new poster, **not** a price quote). If the actual quote exceeds your limit, creation is refused. It is a per-poster ceiling, not a daily or account budget. Your assistant must still show the exact prompt, selection and cost and ask for approval before creating. Do not auto-approve `create_poster` or `advance_poster`.
+
+**Try this first:** “Quote a vertical 2:3 poster for a café opening, with the headline 'Grand Opening', warm terracotta colors and a simple modern layout. Show me the exact credits before generating.” A quote returns a request and its current cost. Only approve creation once you have checked them; a pending task is not a completed poster.
+
+## Install from source (optional)
+
+The standalone source is published at [aistudy11/poster-mcp](https://github.com/aistudy11/poster-mcp). For contributors or a fixed local checkout:
 
 ```sh
 git clone https://github.com/aistudy11/poster-mcp.git
@@ -21,7 +59,7 @@ pnpm check
 pnpm test
 ```
 
-Configure an MCP client that supports local stdio servers. Replace the path and key with your own values in the client's **private local settings**, never in a public repository or directory submission:
+Alternatively, configure that source checkout directly. Replace the path and key with your own values in the client's **private local settings**, never in a public repository or directory submission:
 
 ```json
 {
@@ -37,9 +75,9 @@ Configure an MCP client that supports local stdio servers. Replace the path and 
 }
 ```
 
-Use an existing key from your own Poster account's `/api-keys` page. The key is sent only to the configured Poster origin as `X-API-Key`. No website cookies or shared operator account are needed for ordinary use. This directory is independent of the Next.js installation and its dependencies.
+Use an existing key from your own [Poster API Keys](https://poster.sh/api-keys) page. The key is sent only to the configured Poster origin as `X-API-Key`. No website cookies or shared operator account are needed for ordinary use. This directory is independent of the Next.js installation and its dependencies.
 
-The example permits quoting and reading while new creation is disabled. To enable creation, explicitly configure `POSTER_MAX_CREDITS_PER_POSTER` to the maximum credits you approve **for each new poster**. This is a per-request limit, not a daily or account spending budget. Each creation still requires the user's explicit approval of the actual quoted prompt, selection and credits in the MCP client. Do not configure automatic approval of `create_poster` or `advance_poster`.
+Both default configurations permit quoting and reading while new creation is disabled. To enable creation, explicitly configure `POSTER_MAX_CREDITS_PER_POSTER` to the maximum credits you approve **for each new poster**. This is a per-request limit, not a daily or account spending budget. Each creation still requires the user's explicit approval of the actual quoted prompt, selection and credits in the MCP client. Do not configure automatic approval of `create_poster` or `advance_poster`.
 
 Advancing an existing job is a separate mutating operation, available only with `confirmed: true`. It can perform recovery attempts within the original job's budget and settle that job's frozen price. The new-creation cap does not change or limit an already accepted job's price. Only advance a job whose original operation and cost were approved; if that approval is unavailable, read it with `get_poster` and ask the user before continuing. No new creation cap or quote authorizes an old job's settlement.
 
@@ -68,6 +106,14 @@ Example conversation:
 5. When the API returns `ready`, return its real `previewUrl`, document and other result fields. `get_poster` can reopen the same owned result. Private results stay subject to the existing API's ownership check; do not submit them to a public directory.
 
 This initial adapter exposes the supported text-to-poster flow. It does not add editing, uploading, batch generation or translation tools. The existing website and QRCodeBrain capabilities remain available through their existing paths.
+
+## Common setup questions
+
+- **No Poster tools?** Check that Node/npm are installed and available to your desktop app, that the release URL is copied in full, and that the client supports local stdio. Restart the MCP connection and inspect its server log. If the desktop app cannot find `npx`, use its absolute executable path from your Node installation.
+- **Can I use it in browser-only ChatGPT?** This release requires a client that can launch a local stdio process. It does not publish a remote MCP URL or OAuth connector.
+- **Is it free?** The adapter is MIT licensed. Quotes and reads do not spend generation credits; poster creation uses your Poster account's actual quoted credits. Continuing an approved existing job can perform recovery and settle its original price.
+- **What comes back?** A task ID and state; once `ready`, the actual `previewUrl`, structured `document` and other API result fields. The initial adapter has no editing, upload, translation or batch tools. The website's editor is a separate existing product capability.
+- **Where does my key go?** It stays in your private client settings and is sent only to the configured Poster origin. Never paste a real key into a directory, issue, example prompt or shared configuration.
 
 ## Errors and retries
 

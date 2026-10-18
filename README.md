@@ -6,10 +6,17 @@ Poster continues to own API keys, permissions, models, prices, credits, generati
 
 ## Installation and client configuration
 
-Requires Node.js 20.10 or newer. From this directory:
+Requires Node.js 20.10 or newer. The standalone source is published at [aistudy11/poster-mcp](https://github.com/aistudy11/poster-mcp). Clone that repository, then install:
 
 ```sh
+git clone https://github.com/aistudy11/poster-mcp.git
+cd poster-mcp
 pnpm install --frozen-lockfile
+```
+
+For a source checkout, validate it with:
+
+```sh
 pnpm check
 pnpm test
 ```
@@ -86,7 +93,9 @@ Create a reviewable installation archive with:
 pnpm pack --pack-destination /absolute/path/to/output
 ```
 
-The package is currently marked `private`; no npm publication or public source repository is implied. Only this independently written adapter may be considered for a separately approved public release. Never publish the parent repository, its licensed template source, `.env` files, API keys or private acceptance results. A directory submission, moderation approval and a publicly visible backlink are three separate states.
+The independently written adapter is distributed through the public GitHub repository under the included MIT license. `private: true` prevents accidental **npm** publication; it does not prevent cloning or installing this public repository. No npm registry package or remotely hosted MCP endpoint is claimed.
+
+Only this adapter directory is distributed. The parent product repository, licensed template source, `.env` files, API keys and private acceptance records are excluded. The product repository maintains the canonical adapter; the standalone repository is its distribution snapshot, not a separately developed business implementation. A directory submission, publication and a publicly visible backlink are separate states.
 
 ## Protocol references
 

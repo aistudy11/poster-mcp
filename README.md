@@ -1,0 +1,95 @@
+# Poster MCP
+
+An independent **stdio MCP server** that lets an MCP-compatible AI client quote a poster, submit an explicitly approved request, refresh its task and retrieve the owner's result through the existing [Poster](https://poster.sh) API.
+
+Poster continues to own API keys, permissions, models, prices, credits, generation, task persistence and results. This package contains only the MCP adapter. It does not implement a second generator, account system, credit store, database or background scheduler.
+
+## Installation and client configuration
+
+Requires Node.js 20.10 or newer. From this directory:
+
+```sh
+pnpm install --frozen-lockfile
+pnpm check
+pnpm test
+```
+
+Configure an MCP client that supports local stdio servers. Replace the path and key with your own values in the client's **private local settings**, never in a public repository or directory submission:
+
+```json
+{
+  "mcpServers": {
+    "poster": {
+      "command": "node",
+      "args": ["/absolute/path/to/poster-mcp/cli.mjs"],
+      "env": {
+        "POSTER_API_KEY": "your-existing-poster-api-key"
+      }
+    }
+  }
+}
+```
+
+Use an existing key from your own Poster account's `/api-keys` page. The key is sent only to the configured Poster origin as `X-API-Key`. No website cookies or shared operator account are needed for ordinary use. This directory is independent of the Next.js installation and its dependencies.
+
+The example permits quoting and reading while new creation is disabled. To enable creation, explicitly configure `POSTER_MAX_CREDITS_PER_POSTER` to the maximum credits you approve **for each new poster**. This is a per-request limit, not a daily or account spending budget. Each creation still requires the user's explicit approval of the actual quoted prompt, selection and credits in the MCP client. Do not configure automatic approval of `create_poster` or `advance_poster`.
+
+Advancing an existing job is a separate mutating operation, available only with `confirmed: true`. It can perform recovery attempts within the original job's budget and settle that job's frozen price. The new-creation cap does not change or limit an already accepted job's price. Only advance a job whose original operation and cost were approved; if that approval is unavailable, read it with `get_poster` and ask the user before continuing. No new creation cap or quote authorizes an old job's settlement.
+
+| Variable | Behavior |
+|---|---|
+| `POSTER_API_KEY` | Required existing personal Poster key. Never pass it as tool input or a URL parameter. |
+| `POSTER_API_URL` | Optional HTTPS origin; defaults to `https://poster.sh`. HTTP is allowed only for local development on loopback. |
+| `POSTER_MAX_CREDITS_PER_POSTER` | Optional nonnegative integer. Omitted disables creation; quotes and existing results remain available. Zero permits only a genuinely zero-credit quote. |
+| `POSTER_REQUEST_TIMEOUT_MS` | Optional positive integer, default 15000. A timeout does not prove a submission failed. |
+
+## Tools and workflow
+
+| Tool | Existing API | Effect |
+|---|---|---|
+| `quote_poster` | `GET /api/poster/structured/capability` | Free authenticated quote. Returns the actual model, selection, credits and an exact request with a UUID. |
+| `create_poster` | `POST /api/poster/structured` | Potentially paid. Requires `confirmed: true`, the exact quoted request and an operator-configured credit limit. |
+| `get_poster` | `GET /api/poster/structured/{id}` | Read-only owned task/result. |
+| `advance_poster` | `POST /api/poster/structured/{id}` | Requires `confirmed: true` to continue the approved existing job, including original-budget recovery, persistence and frozen-price settlement. |
+
+Example conversation:
+
+1. “Quote a 2:3 poster for our café opening.” The client calls `quote_poster` with the brief and optional selection. Omitted model/quality/ratio values are resolved by Poster, not guessed locally.
+2. Show the returned prompt, model, ratio and credits. Ask the user to approve the actual operation and cost.
+3. After explicit approval and with the configured limit, call `create_poster` with the returned `request` unchanged and `confirmed: true`.
+4. If the result is `planning` or `generating`, use `advance_poster` with its existing ID and `confirmed: true` only under the original job/cost approval. These states are pending; do not report an image as completed. Use `get_poster` when only reading status.
+5. When the API returns `ready`, return its real `previewUrl`, document and other result fields. `get_poster` can reopen the same owned result. Private results stay subject to the existing API's ownership check; do not submit them to a public directory.
+
+This initial adapter exposes the supported text-to-poster flow. It does not add editing, uploading, batch generation or translation tools. The existing website and QRCodeBrain capabilities remain available through their existing paths.
+
+## Errors and retries
+
+- `CREDIT_LIMIT_REQUIRED`: no creation cap configured; no submission was sent.
+- `CREDIT_LIMIT_EXCEEDED`: the approved quote exceeds the configured cap; no submission was sent.
+- `POSTER_HTTP_400/409`: the existing API refused the request; quote the intended selection again when the price or input needs correcting. Do not retry indefinitely.
+- `POSTER_HTTP_401/403`: the key or permission is not accepted.
+- `POSTER_HTTP_402`: the key owner's Poster balance is insufficient. This adapter does not create a new billing system.
+- `POSTER_HTTP_404`: unavailable or non-owned result; do not infer another user's data exists.
+- `POSTER_HTTP_429/503`: respect the service's refusal and retry deliberately; no automatic paid resubmission is performed.
+- `REQUEST_OUTCOME_UNKNOWN`: the response was lost or timed out. Preserve the original UUID **and exact complete request**. Read/advance a known task ID, or explicitly retry that same request. Never invent a replacement UUID to recover an uncertain purchase.
+- `INVALID_POSTER_RESPONSE`: malformed or incomplete output, including a false `ready` with no actual result; never presented as success.
+
+The API remains authoritative for quote changes and idempotent retries. Credential-bearing redirects are refused. Arbitrary upstream error text is not returned to the AI client. Stdout carries only MCP protocol messages; startup diagnostics use sanitized structured stderr.
+
+## Validation and distribution status
+
+`pnpm test` uses the official MCP SDK client over a real child-process stdio transport and a controlled local HTTP API fixture. It proves adapter wiring, body preservation, confirmation/cap boundaries, error propagation and credential-safe redirects. The fixture is not a production generation or billing receipt. Production checks and release results belong to the project's current development checklist; do not claim they passed merely because local tests passed.
+
+Create a reviewable installation archive with:
+
+```sh
+pnpm pack --pack-destination /absolute/path/to/output
+```
+
+The package is currently marked `private`; no npm publication or public source repository is implied. Only this independently written adapter may be considered for a separately approved public release. Never publish the parent repository, its licensed template source, `.env` files, API keys or private acceptance results. A directory submission, moderation approval and a publicly visible backlink are three separate states.
+
+## Protocol references
+
+- [Official TypeScript SDK server guide](https://ts.sdk.modelcontextprotocol.io/server)
+- SDK dependency pinned to `@modelcontextprotocol/sdk@1.32.1`, using its real `McpServer`, `registerTool`, `StdioServerTransport` and `StdioClientTransport` APIs.
+- JSON Schema in MCP tool inputs is validated by the SDK. This package does not modify website Schema.org JSON-LD.

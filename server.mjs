@@ -2,7 +2,7 @@
  * @fileoverview Four MCP tools adapting the existing authenticated Poster HTTP API.
  * @input PosterApi configuration, explicit user confirmation and upstream quotes/results.
  * @output createPosterMcpServer; all business execution remains in Poster.
- * @pos Single standalone tool-registration path used by stdio and protocol tests.
+ * @pos Single tool-registration path shared by local stdio and authenticated remote HTTP.
  */
 import { randomUUID } from 'node:crypto';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -39,7 +39,7 @@ async function toolResult(action) {
   }
 }
 
-/** @param {ReturnType<import('./poster-api.mjs').readConfiguration>} configuration @param {{ fetch?: typeof fetch }} [options] */
+/** @param {ReturnType<import('./poster-api.mjs').readConfiguration>} configuration @param {{ fetch?: typeof fetch, allowMutations?: boolean }} [options] */
 export function createPosterMcpServer(configuration, options = {}) {
   const api = new PosterApi(configuration, options.fetch);
   const server = new McpServer({ name: 'poster', version: manifest.version }, {
@@ -62,7 +62,7 @@ export function createPosterMcpServer(configuration, options = {}) {
     return { quote, request, confirmationRequired: true, maximumCredits: configuration.maximumCredits ?? null };
   }));
 
-  server.registerTool('create_poster', {
+  if (options.allowMutations !== false) server.registerTool('create_poster', {
     title: 'Create an Approved Poster',
     description: 'PAID ACTION: submit the exact quoted request only after the user approves its prompt, selection and quoted credits. Requires the operator-configured per-poster credit limit. Reuse the identical requestId and payload after uncertainty; never silently create a replacement task. A planning/generating response is pending, not a finished poster.',
     inputSchema: { request: requestSchema, confirmed: z.literal(true) },
@@ -81,7 +81,7 @@ export function createPosterMcpServer(configuration, options = {}) {
     annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
   }, async ({ id }) => toolResult(async () => api.design(`/api/poster/structured/${encodeURIComponent(id)}`)));
 
-  server.registerTool('advance_poster', {
+  if (options.allowMutations !== false) server.registerTool('advance_poster', {
     title: 'Refresh an Existing Poster Task',
     description: 'MUTATING ACTION: continue an existing owned job only with explicit approval of that job and its original cost. The existing API may perform recovery attempts within that job budget, save results and settle its frozen approved price. This does not create a separate poster request. The new-creation credit cap does not reprice an accepted job. Use get_poster for read-only status. Do not replace a failed job automatically.',
     inputSchema: { id: z.string().uuid(), confirmed: z.literal(true) },

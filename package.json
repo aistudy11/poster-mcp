@@ -3,16 +3,54 @@
   "version": "0.1.2",
   "description": "AI Poster Generator MCP server for Poster.sh: quote, approved text-to-poster creation and owned results",
   "type": "module",
-  "bin": { "poster-mcp": "cli.mjs" },
-  "files": ["cli.mjs", "server.mjs", "poster-api.mjs", "README.md", "assets/logo.png"],
-  "engines": { "node": ">=20.10" },
+  "bin": {
+    "poster-mcp": "cli.mjs"
+  },
+  "files": [
+    "cli.mjs",
+    "http.mjs",
+    "server.mjs",
+    "poster-api.mjs",
+    "README.md",
+    "assets/logo.png"
+  ],
+  "engines": {
+    "node": ">=20.10"
+  },
   "private": true,
-  "keywords": ["mcp", "mcp-server", "ai-poster-generator", "ai-poster-maker", "text-to-poster", "poster-sh"],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "ai-poster-generator",
+    "ai-poster-maker",
+    "text-to-poster",
+    "poster-sh"
+  ],
   "license": "MIT",
   "homepage": "https://poster.sh",
-  "repository": { "type": "git", "url": "https://github.com/aistudy11/poster-mcp.git" },
-  "bugs": { "url": "https://github.com/aistudy11/poster-mcp/issues" },
-  "scripts": { "start": "node cli.mjs", "test": "node --test test/*.test.mjs", "check": "tsc --noEmit" },
-  "dependencies": { "@modelcontextprotocol/sdk": "1.32.1", "zod": "3.25.76" },
-  "devDependencies": { "@types/node": "22.19.15", "typescript": "5.7.3" }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aistudy11/poster-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aistudy11/poster-mcp/issues"
+  },
+  "scripts": {
+    "start": "node cli.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.15",
+    "typescript": "5.7.3"
+  },
+  "exports": {
+    "./server": "./server.mjs",
+    "./http": "./http.mjs",
+    "./api": "./poster-api.mjs"
+  }
 }

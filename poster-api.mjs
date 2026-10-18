@@ -13,7 +13,7 @@ const environmentSchema = z.object({
   POSTER_REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(15000),
 });
 
-/** @param {NodeJS.ProcessEnv} environment */
+/** @param {Record<string, string | undefined>} environment */
 export function readConfiguration(environment) {
   const parsed = environmentSchema.safeParse(environment);
   if (!parsed.success) throw new Error('Invalid Poster configuration. Check the documented environment variables.');

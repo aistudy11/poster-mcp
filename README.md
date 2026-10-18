@@ -6,11 +6,19 @@
 
 Use it for café openings, event announcements, product launches or promotional posters. Describe the message and visual direction in your assistant; Poster returns the actual preview URL and structured poster document when the task is ready.
 
-**Four tools · Local stdio · Your own Poster API Key · MIT adapter**
+**Four shared tools · Local stdio · Remote HTTP host in acceptance · Your own Poster credits · MIT adapter**
 
 [Website](https://poster.sh) · [API Keys](https://poster.sh/api-keys) · [Releases](https://github.com/aistudy11/poster-mcp/releases) · [Report an issue](https://github.com/aistudy11/poster-mcp/issues)
 
-## Quick start
+## Remote web connection (not yet released)
+
+The current development branch adds a hosted Streamable HTTP endpoint at `https://poster.sh/api/mcp` with OAuth authorization through your existing Poster sign-in and personal API Key. This endpoint is **pending production migration and release**; ChatGPT, Gemini and Claude web compatibility is pending individual live acceptance. Do not treat this section as a live connection claim.
+
+Connection has no additional Poster fee. Quote/read tools do not spend generation credits. Creation is opt-in during consent, requires a per-poster credit ceiling and explicit approval of the actual quote, and uses the same account balance and billing API as the website. A new AI connection does not create an account or grant credits again. Revoke future access in the existing account console at `/mcp/connections`; revocation does not cancel an already accepted poster job. AI-client subscriptions and access restrictions are separate.
+
+Read-only remote grants expose `quote_poster` and `get_poster`; creation-enabled grants expose all four existing tools. Your original API Key is never returned to the AI client, callback or consent HTML. Delegated access expires; refresh rotates tokens; disabling the original Key also blocks delegated access.
+
+## Quick start — released local stdio
 
 Requires **Node.js 20.10+ with npm/npx** and an MCP client that can launch local **stdio** servers. This is not a remote HTTP connector: do not enter `poster.sh` as an MCP endpoint. Your assistant runs this adapter locally and it calls the existing Poster HTTPS API.
 

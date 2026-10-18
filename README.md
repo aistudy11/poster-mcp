@@ -6,13 +6,15 @@
 
 Use it for café openings, event announcements, product launches or promotional posters. Describe the message and visual direction in your assistant; Poster returns the actual preview URL and structured poster document when the task is ready.
 
-**Four shared tools · Local stdio · Remote HTTP host in acceptance · Your own Poster credits · MIT adapter**
+**Four shared tools · Local stdio · Hosted Streamable HTTP · Client acceptance pending · Your own Poster credits · MIT adapter**
 
 [Website](https://poster.sh) · [API Keys](https://poster.sh/api-keys) · [Releases](https://github.com/aistudy11/poster-mcp/releases) · [Report an issue](https://github.com/aistudy11/poster-mcp/issues)
 
-## Remote web connection (not yet released)
+## Remote web connection — endpoint deployed, client acceptance pending
 
-The current development branch adds a hosted Streamable HTTP endpoint at `https://poster.sh/api/mcp` with OAuth authorization through your existing Poster sign-in and personal API Key. This endpoint is **pending production migration and release**; ChatGPT, Gemini and Claude web compatibility is pending individual live acceptance. Do not treat this section as a live connection claim.
+The hosted Streamable HTTP endpoint is `https://poster.sh/api/mcp`, with OAuth authorization through your existing Poster sign-in and personal API Key. Production health, authorization discovery and unauthenticated refusal have passed. **ChatGPT, Gemini and Claude web acceptance is still pending**; deployment alone does not prove that a particular account or platform can connect.
+
+In a compatible remote MCP client, add that exact server URL and select OAuth. Sign in to your existing Poster account and choose your own active API Key by its label on the Poster consent page. Read-only access is the default for quoting and reading an existing result; keep it read-only for acceptance. Never paste your original Key into an AI conversation or callback URL. Platform account, region, plan and permission restrictions still apply.
 
 Connection has no additional Poster fee. Quote/read tools do not spend generation credits. Creation is opt-in during consent, requires a per-poster credit ceiling and explicit approval of the actual quote, and uses the same account balance and billing API as the website. A new AI connection does not create an account or grant credits again. Revoke future access in the existing account console at `/mcp/connections`; revocation does not cancel an already accepted poster job. AI-client subscriptions and access restrictions are separate.
 
@@ -20,7 +22,7 @@ Read-only remote grants expose `quote_poster` and `get_poster`; creation-enabled
 
 ## Quick start — released local stdio
 
-Requires **Node.js 20.10+ with npm/npx** and an MCP client that can launch local **stdio** servers. This is not a remote HTTP connector: do not enter `poster.sh` as an MCP endpoint. Your assistant runs this adapter locally and it calls the existing Poster HTTPS API.
+Requires **Node.js 20.10+ with npm/npx** and an MCP client that can launch local **stdio** servers. The following configuration runs local stdio; the remote URL above uses the hosted HTTP transport. Your assistant runs this adapter locally and it calls the existing Poster HTTPS API.
 
 1. Sign in to [Poster.sh API Keys](https://poster.sh/api-keys) and use your own existing key. Generation uses that account's balance.
 2. Paste the configuration below into your client's **private local MCP settings**, replacing only the key placeholder. Clients using `mcpServers` JSON, including Claude Desktop and Cursor, can use this format.
@@ -149,7 +151,7 @@ Create a reviewable installation archive with:
 pnpm pack --pack-destination /absolute/path/to/output
 ```
 
-The independently written adapter is distributed through the public GitHub repository under the included MIT license. `private: true` prevents accidental **npm** publication; it does not prevent cloning or installing this public repository. No npm registry package or remotely hosted MCP endpoint is claimed.
+The independently written adapter is distributed through the public GitHub repository under the included MIT license. `private: true` prevents accidental **npm** publication; it does not prevent cloning or installing this public repository. No npm registry package is published. The local archive remains v0.1.2; the hosted HTTP transport above reuses the same canonical tool implementation and existing Poster API.
 
 Only this adapter directory is distributed. The parent product repository, licensed template source, `.env` files, API keys and private acceptance records are excluded. The product repository maintains the canonical adapter; the standalone repository is its distribution snapshot, not a separately developed business implementation. A directory submission, publication and a publicly visible backlink are separate states.
 

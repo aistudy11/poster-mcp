@@ -76,6 +76,23 @@ test('real SDK client over stdio walks quote → explicit create → existing pr
   assert.equal(stderr(), '');
 });
 
+test('keyless discovery lists tools but every business operation is refused before HTTP', async (t) => {
+  const { client, calls } = await fixture(t, { key: '' });
+  const inventory = await client.listTools();
+  assert.deepEqual(inventory.tools.map(({ name }) => name).sort(), ['advance_poster', 'create_poster', 'get_poster', 'quote_poster']);
+  for (const [name, arguments_] of [
+    ['quote_poster', { prompt: 'Poster' }],
+    ['get_poster', { id: taskId }],
+    ['create_poster', { request: { requestId: randomUUID(), prompt: 'Poster', quotedCredits: 2 }, confirmed: true }],
+    ['advance_poster', { id: taskId, confirmed: true }],
+  ]) {
+    const refused = await client.callTool({ name, arguments: arguments_ });
+    assert.equal(refused.isError, true);
+    assert.equal(output(refused).error, 'API_KEY_REQUIRED');
+  }
+  assert.equal(calls.length, 0);
+});
+
 test('missing/false confirmation never reaches the API', async (t) => {
   const { client, calls } = await fixture(t);
   const request = { requestId: randomUUID(), prompt: 'Poster', quotedCredits: 2 };

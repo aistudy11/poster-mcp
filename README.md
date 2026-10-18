@@ -25,7 +25,7 @@ Requires **Node.js 20.10+ with npm/npx** and an MCP client that can launch local
       "command": "npx",
       "args": [
         "--yes",
-        "--package=https://github.com/aistudy11/poster-mcp/releases/download/v0.1.1/poster-sh-mcp-0.1.1.tgz",
+        "--package=https://github.com/aistudy11/poster-mcp/releases/download/v0.1.2/poster-sh-mcp-0.1.2.tgz",
         "poster-mcp"
       ],
       "env": {
@@ -83,7 +83,7 @@ Advancing an existing job is a separate mutating operation, available only with 
 
 | Variable | Behavior |
 |---|---|
-| `POSTER_API_KEY` | Required existing personal Poster key. Never pass it as tool input or a URL parameter. |
+| `POSTER_API_KEY` | Required for business calls; without a key, only MCP discovery is available. Use your existing personal Poster key. Never pass it as tool input or a URL parameter. |
 | `POSTER_API_URL` | Optional HTTPS origin; defaults to `https://poster.sh`. HTTP is allowed only for local development on loopback. |
 | `POSTER_MAX_CREDITS_PER_POSTER` | Optional nonnegative integer. Omitted disables creation; quotes and existing results remain available. Zero permits only a genuinely zero-credit quote. |
 | `POSTER_REQUEST_TIMEOUT_MS` | Optional positive integer, default 15000. A timeout does not prove a submission failed. |
@@ -116,6 +116,8 @@ This initial adapter exposes the supported text-to-poster flow. It does not add 
 - **Where does my key go?** It stays in your private client settings and is sent only to the configured Poster origin. Never paste a real key into a directory, issue, example prompt or shared configuration.
 
 ## Errors and retries
+
+- `API_KEY_REQUIRED`: tool discovery is available, but no Poster API request is sent until you configure your own key.
 
 - `CREDIT_LIMIT_REQUIRED`: no creation cap configured; no submission was sent.
 - `CREDIT_LIMIT_EXCEEDED`: the approved quote exceeds the configured cap; no submission was sent.

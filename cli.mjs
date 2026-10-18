@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * @fileoverview Local stdio entry point for the standalone Poster MCP adapter.
- * @input POSTER_API_KEY, optional service origin, explicit credit cap and HTTP timeout.
+ * @input API key for business calls; optional service origin, explicit credit cap and HTTP timeout.
  * @output Standard MCP JSON-RPC on stdout; sanitized startup diagnostics on stderr.
  * @pos MCP-client-spawned process; no web listener, account store or background scheduler.
  */

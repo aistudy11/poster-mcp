@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 const environmentSchema = z.object({
   POSTER_API_URL: z.string().url().default('https://poster.sh'),
-  POSTER_API_KEY: z.string().trim().min(1).refine((value) => !/[\r\n]/u.test(value)),
+  POSTER_API_KEY: z.string().trim().refine((value) => !/[\r\n]/u.test(value)).default(''),
   POSTER_MAX_CREDITS_PER_POSTER: z.coerce.number().int().nonnegative().optional(),
   POSTER_REQUEST_TIMEOUT_MS: z.coerce.number().int().positive().default(15000),
 });
@@ -65,6 +65,7 @@ export class PosterApi {
 
   /** @param {string} path @param {'GET'|'POST'} [method] @param {Record<string, unknown>} [body] */
   async request(path, method = 'GET', body) {
+    if (!this.configuration.apiKey) throw new PosterApiError('API_KEY_REQUIRED');
     const url = new URL(path, this.configuration.origin);
     if (url.origin !== this.configuration.origin || !url.pathname.startsWith('/api/poster/structured')) {
       throw new PosterApiError('INVALID_API_PATH');

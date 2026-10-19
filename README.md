@@ -41,7 +41,7 @@ Requires **Node.js 20.10+ with npm/npx** and an MCP client that can launch local
       "command": "npx",
       "args": [
         "--yes",
-        "--package=https://github.com/aistudy11/poster-mcp/releases/download/v0.1.2/poster-sh-mcp-0.1.2.tgz",
+        "--package=https://github.com/aistudy11/poster-mcp/releases/download/v0.1.3/poster-sh-mcp-0.1.3.tgz",
         "poster-mcp"
       ],
       "env": {
@@ -60,7 +60,7 @@ This installs the versioned official GitHub release automatically; no private pr
 
 ## Integrate from your website or Node backend
 
-The existing package exports `PosterApi`, `PosterApiError` and `readConfiguration` through `@poster-sh/mcp/api`. Follow the [developer guide](DEVELOPERS.md) for a complete free quick start, the supported HTTP/MCP workflow, actual states/fields, cost approval and idempotent retries. The v0.1.3 candidate includes [a quote/read-only CLI](examples/readonly.mjs), the named API export and the guide. The installed v0.1.2 release has no package `exports` and cannot use `@poster-sh/mcp/api`; do not treat the canonical source export as already published. The developer guide uses the reviewable v0.1.3 archive until public distribution is approved.
+The existing package exports `PosterApi`, `PosterApiError` and `readConfiguration` through `@poster-sh/mcp/api`. Follow the [developer guide](DEVELOPERS.md) for a complete free quick start, the supported HTTP/MCP workflow, actual states/fields, cost approval and idempotent retries. Release v0.1.3 includes [a quote/read-only CLI](examples/readonly.mjs), the named API export and the guide. The older v0.1.2 release has no package `exports` and cannot use `@poster-sh/mcp/api`; use v0.1.3 for this integration.
 
 Keep API Keys in your server environment. **Raw `PosterApi` does not enforce the MCP tool's creation ceiling or confirmation**: applications using the HTTP adapter must show the real quote, apply their cap and obtain approval before a mutation. Reuse this client or your existing QRCodeBrain client; do not build another account, pricing or task system. The website currently has no `/docs` route; this package guide is not a claim that website documentation has launched.
 
@@ -163,7 +163,7 @@ Create a reviewable installation archive with:
 pnpm pack --pack-destination /absolute/path/to/output
 ```
 
-The independently written adapter is distributed through the public GitHub repository under the included MIT license. `private: true` prevents accidental **npm** publication; it does not prevent cloning or installing this public repository. No npm registry package is published. The existing public archive remains v0.1.2; the v0.1.3 source/archive candidate adds developer documentation, the example and the existing named API export, pending public distribution approval. The hosted HTTP transport above reuses the same canonical tool implementation and existing Poster API.
+The independently written adapter is distributed through the public GitHub repository under the included MIT license. `private: true` prevents accidental **npm** publication; it does not prevent cloning or installing this public repository. No npm registry package is published. Release v0.1.3 adds developer documentation, the example and the existing named API export; earlier release assets, including v0.1.2, remain available. The hosted HTTP transport above reuses the same canonical tool implementation and existing Poster API.
 
 Only this adapter directory is distributed. The parent product repository, licensed template source, `.env` files, API keys and private acceptance records are excluded. The product repository maintains the canonical adapter; the standalone repository is its distribution snapshot, not a separately developed business implementation. A directory submission, publication and a publicly visible backlink are separate states.
 

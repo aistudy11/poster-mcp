@@ -14,18 +14,18 @@ See [MCP setup and client acceptance boundaries](README.md). QRCodeBrain already
 
 ## Install the existing client in a clean directory
 
-Node.js 20.10 or newer and npm are required. Node.js must support the package's JSON import attributes. The v0.1.3 guide/example archive is a candidate awaiting public release approval. For review, install the supplied local archive:
+Node.js 20.10 or newer and npm are required. Node.js must support the package's JSON import attributes. Install the versioned GitHub release:
 
 ```sh
 mkdir poster-integration
 cd poster-integration
 npm init -y
-npm install /absolute/path/to/poster-sh-mcp-0.1.3.tgz
+npm install https://github.com/aistudy11/poster-mcp/releases/download/v0.1.3/poster-sh-mcp-0.1.3.tgz
 ```
 
 Create or select a personal Key at [Poster API Keys](https://poster.sh/api-keys). Put it in `POSTER_API_KEY` through your server's private environment or secret manager. Never place it in `NEXT_PUBLIC_*`, browser code, a URL, chat, a commit or shared logs. The adapter sends `X-API-Key` only to the configured origin and refuses redirects. It does not use an operator's shared account.
 
-The installed v0.1.2 release has no package `exports`; the source-only `./api` export must not be mistaken for a published SDK entry. v0.1.3 packages that existing export together with this guide and the example, without replacing the transport. After an approved v0.1.3 publication, its versioned GitHub release archive can replace the local archive path above; do not assume an unpublished URL exists. The existing v0.1.2 local MCP installation in the README remains usable.
+The older v0.1.2 release has no package `exports` and cannot import `@poster-sh/mcp/api`. Use v0.1.3 for the named export, guide and example; the transport remains the same existing implementation. The v0.1.2 release remains available for existing local MCP installations.
 
 Save this complete example as `readonly.mjs` in the directory above:
 
@@ -67,7 +67,7 @@ node examples/readonly.mjs quote
 node examples/readonly.mjs get
 ```
 
-The added guide/example and named API export are a v0.1.3 distribution candidate until the public snapshot is approved and released. The already released v0.1.2 contains `poster-api.mjs` but lacks the named `./api` export and these new files; it is not the archive used by this quick start. To test the candidate without publishing, run `pnpm pack --pack-destination /absolute/path/to/output`, install that archive in a clean directory, and run `node node_modules/@poster-sh/mcp/examples/readonly.mjs quote` or `get`. Never substitute a private repository URL for an external developer's installation.
+From the clean installation above, run the bundled example with `node node_modules/@poster-sh/mcp/examples/readonly.mjs quote` or `get`. Contributors can also create a local archive with `pnpm pack --pack-destination /absolute/path/to/output` and install it without publishing. Never substitute a private repository URL for an external developer's installation.
 
 ## HTTP and MCP contracts
 

@@ -8,7 +8,7 @@ Shared stdio and Streamable HTTP MCP adapter to the existing Poster HTTP API; no
 | poster-api.mjs | Origin-bound credential-required business transport and response validation | Existing API adapter |
 | examples/readonly.mjs | Quote/read-only CLI reusing the exported PosterApi; never submits or advances | Developer integration example |
 
-`DEVELOPERS.md` documents the existing server-client export and supported workflow. The guide and example are included in candidate archives; public release status is recorded separately. Raw PosterApi callers own approval/cap checks; the adapter itself is a transport boundary.
+`DEVELOPERS.md` documents the existing server-client export and supported workflow. The guide and example are included in v0.1.3 archives; publication receipts are recorded separately. Raw PosterApi callers own approval/cap checks; the adapter itself is a transport boundary.
 
 Upstream: MCP-compatible client. Downstream: Poster structured API, which owns identity, task state, pricing and billing. Update when this boundary changes.
 

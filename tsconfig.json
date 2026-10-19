@@ -4,5 +4,5 @@
     "allowJs": true, "checkJs": true, "strict": true, "noEmit": true,
     "skipLibCheck": true, "resolveJsonModule": true, "types": ["node"]
   },
-  "include": ["*.mjs"], "exclude": ["node_modules", "test"]
+  "include": ["*.mjs", "examples/*.mjs"], "exclude": ["node_modules", "test"]
 }

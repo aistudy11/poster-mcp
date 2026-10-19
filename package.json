@@ -1,6 +1,6 @@
 {
   "name": "@poster-sh/mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "AI Poster Generator MCP server for Poster.sh: quote, approved text-to-poster creation and owned results",
   "type": "module",
   "bin": {
@@ -12,6 +12,8 @@
     "server.mjs",
     "poster-api.mjs",
     "README.md",
+    "DEVELOPERS.md",
+    "examples/readonly.mjs",
     "assets/logo.png"
   ],
   "engines": {
